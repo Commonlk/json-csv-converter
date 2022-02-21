@@ -1,4 +1,4 @@
-import { AppBar, Container, Typography } from "@mui/material";
+import { AppBar, Container, Grid, Link, Typography } from "@mui/material";
 import React, { useState } from "react";
 import AreaTextInput from "./features/areaTextInput/AreaTextInput";
 import FormFileInput from "./features/formFileInput/FormFileInput";
@@ -19,6 +19,16 @@ function App() {
         <FormFileInput setFile={setFile} />
         <AreaTextInput file={file} />
       </Container>
+      <Grid container justifyContent="center" className="mt-12">
+        <Grid item>
+          <Typography variant="body2">
+            Created by{" "}
+            <Link underline="hover" href="https://github.com/Commonlk">
+              Victor Azevedo.
+            </Link>
+          </Typography>
+        </Grid>
+      </Grid>
     </>
   );
 }
