@@ -20,6 +20,11 @@ const AreaTextInput = ({ file }: Props) => {
     if (file) {
       const getFileText = async () => {
         const text = await file?.text();
+        const type = file.name.split(".")[1].toLowerCase();
+
+        if (type === "json") setConversionType("json");
+        if (type === "csv") setConversionType("csv");
+
         setError("");
         setInput(text!);
       };
@@ -51,20 +56,31 @@ const AreaTextInput = ({ file }: Props) => {
       setError("CSV input is empty.");
       return;
     }
-    const text = input.split(";");
-    text.forEach(value => console.log(value));
+    const entryValues = input.split("\r");
+    const keys = entryValues[0].split(";");
+
+    const result: Object[] = [];
+
+    entryValues.forEach((value, index) => {
+      if (index === 0) return;
+      const values = value.split(";");
+
+      let object = {};
+      keys.forEach((key, index) => {
+        object = {
+          ...object,
+          [key]: values[index].replace(/(\r\n|\n|\r)/gm, ""),
+        };
+      });
+      result.push(object);
+    });
+
+    setResult(JSON.stringify(result));
   };
 
   const converter = () => {
-    if (file) {
-      const type = file.name.split(".")[1].toLowerCase();
-
-      if (type === "json") return jsonToCsv();
-      if (type === "csv") return csvToJson();
-    } else {
-      if (convertionType === "json") jsonToCsv();
-      if (convertionType === "csv") return csvToJson();
-    }
+    if (convertionType === "json") return jsonToCsv();
+    if (convertionType === "csv") return csvToJson();
   };
 
   const handleConversionChange = () => {
